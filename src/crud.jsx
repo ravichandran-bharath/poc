@@ -39,10 +39,15 @@ export default class CRUD extends Component {
         
         .then((response)=>{
             this.setState({
-                user: response.data
+                user: response.data,
+                name: this.state.user.name,
+                address: this.state.user.address,
+                email: this.state.user.email,
+                contact: this.state.user.contact
             });
         });
     }
+
 
     DeleteData() {
         axios.delete("http://192.168.1.103:8000/deleteUserDetails",{
@@ -130,9 +135,9 @@ export default class CRUD extends Component {
                             {this.state.message}
                         </center>
                         <Button
-                        type="primary"
-                        style={{width:100, marginLeft:500, alignItems:'center'}}
-                        onClick={this.AddData.bind(this)}
+                            type="primary"
+                            style={{width:100, marginLeft:500, alignItems:'center'}}
+                            onClick={this.AddData.bind(this)}
                         >
                             Submit
                         </Button>
@@ -142,38 +147,38 @@ export default class CRUD extends Component {
 
                 <div style={{backgroundColor:'#f2f2f2', padding:10, margin:20}}> 
                     <Card title=" User Details "> 
-                    <table>
-                        <tbody>  
-                            <tr><th><b>S.No</b></th><th><b>NAME</b></th><th><b>ADDRESS</b></th><th><b>EMAIL</b></th><th><b>CONTACT</b></th><th><b>Edit</b></th><th><b>Delete</b></th></tr>  
-                            {this.state.user.map((item, index) => (  
-                                <tr key={index}>  
-                                    <td>{index+1}</td>   
-                                    <td>{item.name}</td>                        
-                                    <td>{item.description}</td>  
-                                    <td>{item.email}</td>  
-                                    <td>{item.contact}</td>  
-                                    <td>   
-                                        <Button
-                                            type="primary"
-                                            style={{width:100, alignItems:'center'}}
-                                            onClick={(e) => {this.EditData(item)}}
-                                        >
-                                            Edit
-                                        </Button>
-                                    </td>   
-                                    <td>   
-                                        <Button
-                                            type="primary"
-                                            style={{width:100, alignItems:'center'}}
-                                            onClick={(e) => {this.DeleteData(item._id)}}
-                                        >
-                                            Delete
-                                        </Button>
-                                    </td>   
-                                </tr>  
-                            ))}  
-                        </tbody>  
-                    </table>  
+                        <table>
+                            <tbody>  
+                                <tr><th><b>S.No</b></th><th><b>NAME</b></th><th><b>ADDRESS</b></th><th><b>EMAIL</b></th><th><b>CONTACT</b></th><th><b>Edit</b></th><th><b>Delete</b></th></tr>  
+                                {this.state.user.map((item, index) => (  
+                                    <tr key={index}>  
+                                        <td>{index+1}</td>   
+                                        <td>{item.name}</td>                        
+                                        <td>{item.address}</td>  
+                                        <td>{item.email}</td>  
+                                        <td>{item.contact}</td>  
+                                        <td>   
+                                            <Button
+                                                type="primary"
+                                                style={{width:100, alignItems:'center'}}
+                                                onClick={(e) => {this.EditData(item)}}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </td>   
+                                        <td>   
+                                            <Button
+                                                type="primary"
+                                                style={{width:100, alignItems:'center'}}
+                                                onClick={(e) => {this.DeleteData(item._id)}}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </td>   
+                                    </tr>  
+                                ))}  
+                            </tbody>  
+                        </table>   
                     </Card>
                 </div>
             </div>
