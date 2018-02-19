@@ -6,6 +6,7 @@ import 'antd/dist/antd.css';
 
 const FormItem = Form.Item;
 
+// var id = localStorage._id;
 
 export default class CRUD extends Component {
     
@@ -14,18 +15,22 @@ export default class CRUD extends Component {
         super(props);
         this.state = {
             
+            _id: '',
             id: '',
-            name: '',
+            index: '',
+            firstname: '',
             address: '',
             email: '',
             contact: '',
-            user: []
+            user: [],
+            data : [],
+            sample : []
 
         };
     }
 
     getInitialState() {  
-      return { name: '' ,address: '',email:'',contact:'',id:'',Buttontxt:'Save', user: []};  
+      return { firstname: '' ,address: '',email:'',contact:'',id:'',Buttontxt:'Save', user: []};  
     }
 
     handleChange(e) {  
@@ -39,19 +44,44 @@ export default class CRUD extends Component {
         
         .then((response)=>{
             this.setState({
-                user: response.data,
-                name: this.state.user.name,
-                address: this.state.user.address,
-                email: this.state.user.email,
-                contact: this.state.user.contact
+                
+                user : response.data,
+                data : response.data
+
             });
         });
     }
 
+    // componentWillMount() {
+    //     axios.post("http://192.168.1.103:8000/showUserDetails")
+    //       .then((response) => {
 
-    DeleteData() {
+    //         this.setState({ 
+    //             user : response.data,
+    //             data : response.data 
+    //         });
+            
+    //         console.log("COMPONENT WILL Mount user data :", + response.data );
+    //   })
+    // }
+
+    // componentWillMount() {
+    //     var self = this;
+    //     axios.post("http://192.168.1.103:8000/showUserDetails",{
+    //     })
+    //     .then(function(response){
+    //         console.log(response.data);
+    //         self.setState({
+    //             data: response.data,
+    //             user : response.data
+    //         });
+    //     });
+    // }
+
+
+    DeleteData(id) {
         axios.delete("http://192.168.1.103:8000/deleteUserDetails",{
-            id: this.state.id
+            id: this.state.data.id
         })
         
         .then((response)=>{
@@ -61,23 +91,38 @@ export default class CRUD extends Component {
         });
     }
 
-    EditData(item) {           
-        this.setState({name: item.name,address:item.address,contact:item.contact,email:item.email,id:item._id,Buttontxt:'Update'});  
+    // EditData(item) {           
+    //     this.setState = {firstname: item.firstname,address:item.address,contact:item.contact,email:item.email,id:item._id,Buttontxt:'Update'};  
+    // }
+
+    editUserdata() {
+        alert("edit button initial clicked");
+        axios.post("http://192.168.1.103:8000/showEditUserDetails",{
+          
+        })
+        .then((response)=>{
+            this.setState({
+                data: response.data,
+                sample:response.data
+            });
+        });
+
+        alert("edit button end clicked");
     }
 
     AddData() {
         axios.post("http://192.168.1.103:8000/addUserDetails",{
-        name:this.state.name,
-        address: this.state.address,
-        email: this.state.email,
-        contact: this.state.contact
+            firstname:this.state.firstname,
+            address: this.state.address,
+            email: this.state.email,
+            contact: this.state.contact
         
         })
         .then((response)=>{
             this.setState({
                 data: response.data,
                 id: '',
-                name: '',
+                firstname: '',
                 address: '',
                 email: '',
                 contact: ''
@@ -88,7 +133,7 @@ export default class CRUD extends Component {
     UpdateData() {
         axios.post("http://192.168.1.103:8000/updateUserDetails",{
             id:this.state.id,
-            name:this.state.name,
+            firstname:this.state.firstname,
             address: this.state.address,
             email: this.state.email,
             contact: this.state.contact
@@ -119,7 +164,7 @@ export default class CRUD extends Component {
                 <Card title=" User Details - CRUD Operations ">
                     <Form style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
                         <FormItem {...formItemLayout} label="Name">
-                            <Input size="large" placeholder="Name" onChange={(value) => this.setState({name: value.target.value})} style={{width:250}}/>
+                            <Input size="large" placeholder="Name" onChange={(value) => this.setState({firstname: value.target.value})} style={{width:250}}/>
                         </FormItem>
                         <FormItem {...formItemLayout} label="Address">
                             <Input size="large" placeholder="Address" onChange={(value) => this.setState({address: value.target.value})} style={{width:250}}/>
@@ -153,7 +198,8 @@ export default class CRUD extends Component {
                                 {this.state.user.map((item, index) => (  
                                     <tr key={index}>  
                                         <td>{index+1}</td>   
-                                        <td>{item.name}</td>                        
+                                        <td>{item._id}</td> 
+                                        <td>{item.firstname}</td>                        
                                         <td>{item.address}</td>  
                                         <td>{item.email}</td>  
                                         <td>{item.contact}</td>  
@@ -161,7 +207,7 @@ export default class CRUD extends Component {
                                             <Button
                                                 type="primary"
                                                 style={{width:100, alignItems:'center'}}
-                                                onClick={(e) => {this.EditData(item)}}
+                                                onClick={this.editUserdata.bind(item._id)}
                                             >
                                                 Edit
                                             </Button>
@@ -170,7 +216,7 @@ export default class CRUD extends Component {
                                             <Button
                                                 type="primary"
                                                 style={{width:100, alignItems:'center'}}
-                                                onClick={(e) => {this.DeleteData(item._id)}}
+                                                onClick={this.DeleteData.bind(this)}
                                             >
                                                 Delete
                                             </Button>
@@ -180,6 +226,64 @@ export default class CRUD extends Component {
                             </tbody>  
                         </table>   
                     </Card>
+                </div>
+
+                <div>
+                    <Card title="Update User Details ">
+                        <Form style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+                            <FormItem {...formItemLayout} label="Name">
+                                <Input size="large" placeholder="Name" value={this.state.firstname} onChange={(value) => this.setState({name: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Address">
+                                <Input size="large" placeholder="Address" value={this.state.address} onChange={(value) => this.setState({address: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Email">
+                                <Input size="large" placeholder="Email" value={this.state.email} onChange={(value) => this.setState({email: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Contact">
+                                <Input size="large" type="number" placeholder="Contact" value={this.state.contact} onChange={(value) => this.setState({contact: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            
+                            <center style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+                                {this.state.message}
+                            </center>
+                            <Button
+                                type="primary"
+                                style={{width:100, marginLeft:500, alignItems:'center'}}
+                                onClick={this.UpdateData.bind(this)}
+                            >
+                                Update
+                            </Button>
+
+                        </Form>
+                    </Card>
+
+
+                                    {/* <tr key={data.id}>    
+                                        <td>{data.firstname}</td>                        
+                                        <td>{data.address}</td>  
+                                        <td>{data.email}</td>  
+                                        <td>{data.contact}</td>  
+                                        <td>   
+                                            <Button
+                                                type="primary"
+                                                style={{width:100, alignItems:'center'}}
+                                                onClick={this.editUserdata.bind(this)}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </td>   
+                                        <td>   
+                                            <Button
+                                                type="primary"
+                                                style={{width:100, alignItems:'center'}}
+                                                onClick={this.DeleteData.bind(this)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </td>   
+                                    </tr>   */}
+
                 </div>
             </div>
         );
