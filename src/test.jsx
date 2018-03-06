@@ -179,3 +179,71 @@ export default class Test extends Component {
         );
     }
 }
+
+
+<Modal title="Add Special"
+  visible={visible}
+  onOk={this.handleOk}
+  onSubmit={this.handleInputChange.bind(this)}
+
+  confirmLoading={confirmLoading}
+  onCancel={this.handleCancel}
+>
+
+<Form onSubmit={this.handleInputChange.bind(this)} style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+<FormItem {...formItemLayout} label="Name">
+    <Input size="large" placeholder="Name" value={this.state.firstname} onChange={(value) => this.setState({name: value.target.value})} style={{width:250}}/>
+</FormItem>
+<FormItem {...formItemLayout} label="Address">
+    <Input size="large" placeholder="Address" value={this.state.address} onChange={(value) => this.setState({address: value.target.value})} style={{width:250}}/>
+</FormItem>
+<FormItem {...formItemLayout} label="Email">
+    <Input size="large" placeholder="Email" value={this.state.email} onChange={(value) => this.setState({email: value.target.value})} style={{width:250}}/>
+</FormItem>
+<FormItem {...formItemLayout} label="Contact">
+    <Input size="large" type="number" placeholder="Contact" value={this.state.contact} onChange={(value) => this.setState({contact: value.target.value})} style={{width:250}}/>
+</FormItem>
+
+<center style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+    {this.state.message}
+</center>
+<Button
+    type="primary"
+    style={{width:100, marginLeft:500, alignItems:'center'}}
+    onClick={this.UpdateData.bind(this)}
+>
+    Update
+</Button>
+
+</Form>
+</Modal>
+
+
+
+
+<Form style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+                            <FormItem {...formItemLayout} label="Name">
+                                <Input size="large" placeholder="Name" value={this.state.firstname} onChange={(value) => this.setState({name: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Address">
+                                <Input size="large" placeholder="Address" value={this.state.address} onChange={(value) => this.setState({address: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Email">
+                                <Input size="large" placeholder="Email" value={this.state.email} onChange={(value) => this.setState({email: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Contact">
+                                <Input size="large" type="number" placeholder="Contact" value={this.state.contact} onChange={(value) => this.setState({contact: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            
+                            <center style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+                                {this.state.message}
+                            </center>
+                            <Button
+                                type="primary"
+                                style={{width:100, marginLeft:500, alignItems:'center'}}
+                                onClick={this.UpdateData.bind(this)}
+                            >
+                                Update
+                            </Button>
+
+                        </Form>
