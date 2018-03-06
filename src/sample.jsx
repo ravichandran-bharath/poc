@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import { Form, Input, Button, Card, Modal } from 'antd';
 import 'antd/dist/antd.css';
-import Update from './update';
 
 
 const FormItem = Form.Item;
 
+// var id = localStorage._id;
 
 export default class CRUD extends Component {
     
@@ -15,7 +15,7 @@ export default class CRUD extends Component {
         super(props);
         this.state = {
 
-            visible: false,
+            visible: true,
             confirmLoading: false,
 
             _id: '',
@@ -48,6 +48,33 @@ export default class CRUD extends Component {
         });
     }
 
+    // componentWillMount() {
+    //     axios.post("http://192.168.43.244:8000/showUserDetails")
+    //       .then((response) => {
+
+    //         this.setState({ 
+    //             user : response.data,
+    //             data : response.data 
+    //         });
+            
+    //         console.log("COMPONENT WILL Mount user data :", + response.data );
+    //   })
+    // }
+
+    // componentWillMount() {
+    //     var self = this;
+    //     axios.post("http://192.168.43.244:8000/showUserDetails",{
+    //     })
+    //     .then(function(response){
+    //         console.log(response.data);
+    //         self.setState({
+    //             data: response.data,
+    //             user : response.data
+    //         });
+    //     });
+    // }
+
+
     DeleteData() {
         axios.post("http://127.0.0.1:8000/deleteUserDetails",{
             _id: this.state.data._id
@@ -60,6 +87,64 @@ export default class CRUD extends Component {
         });
     }
 
+    // EditData(item) {           
+    //     this.setState = {firstname: item.firstname,address:item.address,contact:item.contact,email:item.email,id:item._id,Buttontxt:'Update'};  
+    // }
+
+    editUserdata(_id) {
+        alert("edit button initial clicked");
+        axios.post("http://127.0.0.1:8000/showEditUserDetails",{
+            _id : this.state._id
+        })
+        .then((response)=>{
+            this.setState({
+                data: response.data,
+                sample:response.data
+            });
+
+            console.log();
+            console.log(this.state.id);
+            console.log("This is edit user data");
+        });
+
+        alert("edit button end clicked");
+    }
+
+    // AddData() {
+    //     axios.post("http://192.168.43.244:8000/addUserDetails",{
+    //         firstname:this.state.firstname,
+    //         address: this.state.address,
+    //         email: this.state.email,
+    //         contact: this.state.contact
+        
+    //     })
+    //     .then((response)=>{
+    //         this.setState({
+    //             data: response.data,
+    //             id: '',
+    //             firstname: '',
+    //             address: '',
+    //             email: '',
+    //             contact: ''
+    //         });
+    //     });
+    // }
+
+    UpdateData() {
+        axios.post("http://192.168.43.244:8000/updateUserDetails",{
+            _id:this.state._id,
+            firstname:this.state.firstname,
+            address: this.state.address,
+            email: this.state.email,
+            contact: this.state.contact
+        
+        })
+        .then((response)=>{
+            this.setState({
+                data: response.data
+            });
+        });
+    }
 
     handleOk = () => {
         axios.post("http://192.168.43.244:8000/addUserDetails",{
@@ -173,15 +258,13 @@ export default class CRUD extends Component {
                                     <td>{user.email}</td>  
                                     <td>{user.contact}</td>  
                                     <td>   
-                                        {/* <Button
+                                        <Button
                                             type="primary"
                                             style={{width:100, alignItems:'center'}}
                                             onClick={this.editUserdata.bind(this, user._id)}
                                         >
                                             Edit
-                                        </Button> */}
-                                        <Update />
-                                        
+                                        </Button>
                                     </td>   
                                     <td>   
                                         <Button
@@ -197,6 +280,64 @@ export default class CRUD extends Component {
                         </tbody>  
                         </table>
                     </Card>
+                </div>
+
+                <div>
+                    <Card title="Update User Details ">
+                        <Form style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+                            <FormItem {...formItemLayout} label="Name">
+                                <Input size="large" placeholder="Name" value={this.state.firstname} onChange={(value) => this.setState({name: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Address">
+                                <Input size="large" placeholder="Address" value={this.state.address} onChange={(value) => this.setState({address: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Email">
+                                <Input size="large" placeholder="Email" value={this.state.email} onChange={(value) => this.setState({email: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Contact">
+                                <Input size="large" type="number" placeholder="Contact" value={this.state.contact} onChange={(value) => this.setState({contact: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            
+                            <center style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+                                {this.state.message}
+                            </center>
+                            <Button
+                                type="primary"
+                                style={{width:100, marginLeft:500, alignItems:'center'}}
+                                onClick={this.UpdateData.bind(this)}
+                            >
+                                Update
+                            </Button>
+
+                        </Form>
+                    </Card>
+
+
+                                    {/* <tr key={data.id}>    
+                                        <td>{data.firstname}</td>                        
+                                        <td>{data.address}</td>  
+                                        <td>{data.email}</td>  
+                                        <td>{data.contact}</td>  
+                                        <td>   
+                                            <Button
+                                                type="primary"
+                                                style={{width:100, alignItems:'center'}}
+                                                onClick={this.editUserdata.bind(this)}
+                                            >
+                                                Edit
+                                            </Button>
+                                        </td>   
+                                        <td>   
+                                            <Button
+                                                type="primary"
+                                                style={{width:100, alignItems:'center'}}
+                                                onClick={this.DeleteData.bind(this)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </td>   
+                                    </tr>   */}
+
                 </div>
             </div>
         );

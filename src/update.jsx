@@ -1,51 +1,52 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import { Form,  Input, Button,  Card } from 'antd';
-import 'antd/dist/antd.css';
-
-import { Col, Row, Layout, Form, DatePicker } from 'antd';
+import { Modal, Button, Input, Form } from 'antd';
 
 
 const FormItem = Form.Item;
 
-var ID = localStorage._id;
 
-
-class UpdateAwardDetails extends Component {
+class Update extends Component {
         
     constructor(props) {
-        
         super(props);
-        this.state = { 
-            redirect: false,
+        this.state = {
+
+            visible: false,
+            confirmLoading: false,
+
+            _id: '',
             id: '',
-            name: '',
+            firstname: '',
             address: '',
             email: '',
             contact: '',
-            data: []
-        }
+            user: []
+
+        };
     }
 
-    componentWillMount() {
-        var self = this;
-        axios.post("http://192.168.1.103:8000/showUserDetails",{
-            ID : this.state._id
+    showUpdate() {
+        alert("edit button initial clicked");
+        this.setState({
+            visible: true
+        });
+        axios.get("http://127.0.0.1:8000/showEditUserDetails",{
+            _id : this.state._id
         })
-        .then(function(response){
-            console.log(response.data);
-            self.setState({
+        .then((response)=>{
+            this.setState({
                 data: response.data,
-
-                name: this.state.data.name,
-                address: this.state.data.address,
-                email: this.state.data.email,
-                contact: this.state.data.contact
+                sample:response.data
             });
+
+            console.log();
+            console.log(this.state.id);
+            console.log("This is edit user data");
         });
 
+        alert("edit button end clicked");
     }
-
 
     UpdateData() {
         axios.post("http://192.168.1.103:8000/updateUserDetails",{
@@ -63,10 +64,51 @@ class UpdateAwardDetails extends Component {
         });
     }
 
-render()    {
-    if(this.state.redirect===true){
-        return <Redirect path="/salaryDetails" />;
+    handleOk = () => {
+        axios.post("http://192.168.43.244:8000/updateUserDetails",{
+            firstname: this.state.firstname,
+            address: this.state.address,
+            email: this.state.email,
+            contact: this.state.contact
+        })
+        .then(()=>{
+            this.setState({
+            visible: false,
+            confirmLoading: false,
+            firstname: '',
+            address: '',
+            email: '',
+            contact: '',
+            value:null
+            });
+        });
     }
+
+
+    handleCancel = () => {
+        console.log('Clicked cancel button');
+        this.setState({
+            visible: false,
+            confirmLoading: false,
+            firstname: '',
+            address: '',
+            email: '',
+            contact: '',
+            value:null
+        });
+    }
+
+    handleInputChange(event) {
+        this.setState({
+            [event.target.firstname]: event.target.value,
+            [event.target.address]: event.target.value,
+            [event.target.email]: event.target.value,
+            [event.target.contact]: event.target.value,
+        });
+    }
+
+    render()    {
+
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -77,67 +119,41 @@ render()    {
                 sm: { span: 14 },
             },
         };
+
+        const { visible, confirmLoading } = this.state;
+
         return(
-            
-            <LocaleProvider locale={enUS}>
-            <Layout>
-            <Head />
-            <Layout>
-            <Row>
-            <Col lg={{span:6}}>
-                <Nav />   
-            </Col>
-            <Col lg={{span: 18}}>
-            <Form>
-            
-            <FormItem {...formItemLayout} label="EMPCD">
-                <Input size="large" placeholder="EMPCD" onChange={(value) => this.setState({EMPCD: value.target.value})} value={this.state.data.EMPCD} style={{width:250}}/>
-            </FormItem>
-            <FormItem {...formItemLayout} label="AWARD DATE">
-                <DatePicker onChange={(value) => this.setState({ AWARD_DT: moment(value._d).format("DD-MM-YYYY") })} value={this.state.data.AWARD_DT} />
-            </FormItem>
-            <FormItem {...formItemLayout} label="AWARD TYPE">
-                <Input size="large" placeholder="AWARD TYPE" onChange={(value) => this.setState({AWARD_TYPE: value.target.value})} value={this.state.data.AWARD_TYPE} style={{width:250}}/>
-               
-            </FormItem>
-            <FormItem {...formItemLayout} label="DESCRIPTION">
-                <Input size="large" placeholder="DESCRIPTION" onChange={(value) => this.setState({DESCRIPTION: value.target.value})} value={this.state.data.DESCRIPTION} style={{width:250}}/>
-               
-            </FormItem>
-            
-            <FormItem {...formItemLayout} label="BEGIN DATE">  
-                <DatePicker onChange={(value) => this.setState({ BGTDT: moment(value._d).format("DD-MM-YYYY") })} value={this.state.data.BGTDT} />
-            </FormItem>
+            <div>
+                <Button type="primary" onClick={this.showUpdate.bind(this)}>Edit</Button>
 
-            <FormItem {...formItemLayout} label="TILL DATE">  
-                <DatePicker onChange={(value) => this.setState({ TLDT: moment(value._d).format("DD-MM-YYYY") })} value={this.state.data.TLDT} />
-            </FormItem>
-
-            <FormItem {...formItemLayout} label="REMARKS">  
-                <Input size="large" placeholder="REMARKS" onChange={(value) => this.setState({Remarks: value.target.value})} value={this.state.data.Remarks} style={{width:250}}/>
-            </FormItem>
-            
-            <FormItem {...formItemLayout} label="SYSID">
-                <Input size="large" placeholder="SYSID" onChange={(value) => this.setState({SYSID: value.target.value})} value={this.state.data.SYSID} style={{width:250}}/>
-            </FormItem>
-
-
-                    <Button 
-                    type="primary"
-                    onClick={this.updateAD.bind(this)}
+                    <Modal title="Edit User Details"
+                    visible={visible}
+                    onOk={this.handleOk}
+                    confirmLoading={confirmLoading}
+                    onCancel={this.handleCancel}
+                    onSubmit={this.handleInputChange.bind(this)}
                     >
-                        
-                            Save and Proceed
-                    </Button>
-
-                    </Form>
-                    </Col>
-            </Row>
-                </Layout>
-            </Layout>
-            </LocaleProvider>
+                        <Form onSubmit={this.handleInputChange.bind(this)} style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+                            <FormItem {...formItemLayout} label="Name">
+                                <Input size="large" placeholder="Name" value={this.state.firstname} onChange={(value) => this.setState({name: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Address">
+                                <Input size="large" placeholder="Address" value={this.state.address} onChange={(value) => this.setState({address: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Email">
+                                <Input size="large" placeholder="Email" value={this.state.email} onChange={(value) => this.setState({email: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <FormItem {...formItemLayout} label="Contact">
+                                <Input size="large" type="number" placeholder="Contact" value={this.state.contact} onChange={(value) => this.setState({contact: value.target.value})} style={{width:250}}/>
+                            </FormItem>
+                            <center style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
+                                {this.state.message}
+                            </center>
+                        </Form>
+                    </Modal>
+            </div>
         );
     }
 }
 
-export default UpdateAwardDetails;
+export default Update;
