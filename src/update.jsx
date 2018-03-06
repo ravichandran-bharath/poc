@@ -16,53 +16,28 @@ class Update extends Component {
             confirmLoading: false,
 
             _id: '',
-            id: '',
             firstname: '',
             address: '',
             email: '',
             contact: '',
-            user: []
-
         };
     }
 
-    showUpdate() {
-        alert("edit button initial clicked");
+    showUpdate(_user) {
         this.setState({
-            visible: true
-        });
-        axios.get("http://127.0.0.1:8000/showEditUserDetails",{
-            _id : this.state._id
-        })
-        .then((response)=>{
-            this.setState({
-                data: response.data,
-                sample:response.data
-            });
 
-            console.log();
-            console.log(this.state.id);
-            console.log("This is edit user data");
+            visible: true,
+
+            _id: _user.value._id,
+            firstname: _user.value.firstname,
+            address:  _user.value.address,
+            email:  _user.value.email,
+            contact:  _user.value.contact,
         });
 
         alert("edit button end clicked");
     }
 
-    UpdateData() {
-        axios.post("http://192.168.1.103:8000/updateUserDetails",{
-            id:this.state.id,
-            name:this.state.name,
-            address: this.state.address,
-            email: this.state.email,
-            contact: this.state.contact
-        
-        })
-        .then((response)=>{
-            this.setState({
-                data: response.data
-            });
-        });
-    }
 
     handleOk = () => {
         axios.post("http://192.168.43.244:8000/updateUserDetails",{
@@ -124,7 +99,13 @@ class Update extends Component {
 
         return(
             <div>
-                <Button type="primary" onClick={this.showUpdate.bind(this)}>Edit</Button>
+                <Button type="primary" 
+                onClick = {
+                    this.showUpdate.bind(this,this.props)
+                    }
+                >
+                    Edit
+                </Button>
 
                     <Modal title="Edit User Details"
                     visible={visible}

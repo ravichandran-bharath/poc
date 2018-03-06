@@ -34,7 +34,6 @@ export default class CRUD extends Component {
     // }
 
     componentDidMount() {
-    
         axios.get("http://127.0.0.1:8000/showUserDetails",{
         })
         
@@ -45,18 +44,27 @@ export default class CRUD extends Component {
                 data : response.data
 
             });  
-        });
+        });    
     }
 
-    DeleteData() {
-        axios.post("http://127.0.0.1:8000/deleteUserDetails",{
-            _id: this.state.data._id
+    deleteData(_user) {
+        axios.delete("http://127.0.0.1:8000/deleteUserDetails",{
+            _id: _user._id
         })
         
         .then((response)=>{
-            this.setState({
-                user: response.data
-            });
+           if(response.data){
+                axios.get("http://127.0.0.1:8000/showUserDetails",{
+                })
+                
+                .then((response)=>{
+                    this.setState({
+                        user : response.data,
+                        data : response.data
+        
+                    });  
+                });
+           }
         });
     }
 
@@ -136,8 +144,7 @@ export default class CRUD extends Component {
                     onOk={this.handleOk}
                     confirmLoading={confirmLoading}
                     onCancel={this.handleCancel}
-                    onSubmit={this.handleInputChange.bind(this)}
-                    >
+                    onSubmit={this.handleInputChange.bind(this)}>
 
                         <Form onSubmit={this.handleInputChange.bind(this)} style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
                             <FormItem {...formItemLayout} label="Name">
@@ -161,11 +168,20 @@ export default class CRUD extends Component {
                 </Card>
 
                 <div style={{backgroundColor:'#f2f2f2', padding:10, margin:20}}> 
-                    <Card title=" User Details "> 
+                    <Card> 
                     <table>
                         <tbody>  
-                            <tr><th><b>S.No</b></th><th><b>NAME</b></th><th><b>ADDRESS</b></th><th><b>EMAIL</b></th><th><b>CONTACT</b></th><th><b>Edit</b></th><th><b>Delete</b></th></tr>  
-                            {this.state.user.map((user) => (  
+                            <tr>
+                                <th><b>S.No</b></th>
+                                <th><b>NAME</b></th>
+                                <th><b>ADDRESS</b></th>
+                                <th><b>EMAIL</b></th>
+                                <th><b>CONTACT</b></th>
+                                <th><b>Edit</b></th>
+                                <th><b>Delete</b></th>
+                            </tr>   
+                                
+                            {this.state.user.map((user) => ( 
                                 <tr key={user._id}>     
                                     <td>{user._id}</td> 
                                     <td>{user.firstname}</td>                        
@@ -180,21 +196,23 @@ export default class CRUD extends Component {
                                         >
                                             Edit
                                         </Button> */}
-                                        <Update />
+                                        <Update value={user}/>
                                         
                                     </td>   
                                     <td>   
                                         <Button
                                             type="primary"
                                             style={{width:100, alignItems:'center'}}
-                                            onClick={this.DeleteData.bind(this, user._id)}
+                                            onClick={
+                                                    this.deleteData.bind(this, user)
+                                                }
                                         >
                                             Delete
                                         </Button>
                                     </td>   
-                                </tr>  
-                            ))}  
-                        </tbody>  
+                                </tr>
+                            ))}    
+                            </tbody>
                         </table>
                     </Card>
                 </div>
