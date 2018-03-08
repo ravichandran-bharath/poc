@@ -40,7 +40,7 @@ class Update extends Component {
 
 
     handleOk = () => {
-        axios.post("http://192.168.43.244:8000/updateUserDetails",{
+        axios.put("http://127.0.0.1:8000/updateUserDetails",{
             firstname: this.state.firstname,
             address: this.state.address,
             email: this.state.email,
@@ -116,7 +116,7 @@ class Update extends Component {
                     >
                         <Form onSubmit={this.handleInputChange.bind(this)} style={{backgroundColor:'#f2f2f2', padding:10, marginBottom:10}}>
                             <FormItem {...formItemLayout} label="Name">
-                                <Input size="large" placeholder="Name" value={this.state.firstname} onChange={(value) => this.setState({name: value.target.value})} style={{width:250}}/>
+                                <Input size="large" placeholder="Name" value={this.state.firstname} onChange={(value) => this.setState({firstname: value.target.value})} style={{width:250}}/>
                             </FormItem>
                             <FormItem {...formItemLayout} label="Address">
                                 <Input size="large" placeholder="Address" value={this.state.address} onChange={(value) => this.setState({address: value.target.value})} style={{width:250}}/>
